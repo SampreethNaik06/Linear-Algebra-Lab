@@ -10,7 +10,7 @@ A custom vector class implementation for educational purposes.
 
 class Vec:
     # takes input elements which are int or float type only
-    def __init__(self, src=None) -> Self:
+    def __init__(self, src=None) -> None:
         if src is None:
             self.elements = []
         else:
@@ -72,28 +72,39 @@ class Vec:
         return Vec([x + other for x in self.elements])# scalar + vec addition
         #raise RuntimeError("vec _radd_ unimplemented")
 
-    def __iadd__(self, other):
-        raise RuntimeError("vec _iadd_ unimplemented")
+    def __iadd__(self, other: Self | int | float) -> Self:
+        if isinstance(other, Vec):
+            if len(self.elements) != len(other.elements):
+                raise TypeError("Vectors must be of same dimensions")
+            for i in range(len(self.elements)):
+                self.elements[i] = round(self.elements[i] + other.elements[i], 5)
+            return self
+        elif isinstance(other, (int, float)):
+            for i in range(len(self.elements)):
+                self.elements[i] = round(self.elements[i] + other, 5)
+            return self
+        else:
+            raise TypeError(f"Unsupported operand type for +=: {type(other)}")
 
         # return a vector of @n zeroes. precondition: @n > 0
 
-    @staticmethod
-    def zeros(n: int) -> Self:
+    @classmethod
+    def zeros(cls, n: int) -> Self:
         v = [0] * n #creates an array of n numbers
-        return Vec(v)
+        return cls(v)
         # raise RuntimeError("zeros unimpleented")
         # return a vector of @n. precondition: @n > 0
 
-    @staticmethod
-    def ones(n: int) -> Self:
+    @classmethod
+    def ones(cls, n: int) -> Self:
         v = [1] * n #creates an array of 
-        return Vec(v)
+        return cls(v)
         #raise RuntimeError("ones unimpleented")
         # return a vector of @n uniformly distributed numbers in [0, 1]. precondition: @n > 0
 
-    @staticmethod
-    def uniform(n: int) -> Self:
-        return Vec([random.uniform(0, 1) for _ in range(n)])
+    @classmethod
+    def uniform(cls, n: int) -> Self:
+        return cls([random.uniform(0, 1) for _ in range(n)])
         # raise RuntimeError("random unimpleented")
 
     #Calculates the Euclidean norm (L2 norm) of the vector.

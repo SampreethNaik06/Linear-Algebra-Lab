@@ -1,6 +1,5 @@
-from vec import Vec
+from vector_operations import Vec
 import timeit
-from vec import Vec
 
 
 sizes = [2000, 4000, 8000, 16000, 32000, 64000]
